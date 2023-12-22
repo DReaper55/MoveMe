@@ -1,0 +1,64 @@
+{
+  "drivers": [
+    {
+      "DriverID": 1,
+      "CurrentLocation_X": 0.5729394455,
+      "CurrentLocation_Y": 0.445449648,
+      "Destination_X": 0.9222736949,
+      "Destination_Y": 0.9680815685,
+      "Availability": "online",
+      "OnlineStatus": "moving",
+      "Timestamp": 1702395057767,
+      "CurrentOrders": 2,
+      "TotalExpectedOrders": 3
+    },
+    {
+      "DriverID": 2,
+      "CurrentLocation_X": 0.4279529564,
+      "CurrentLocation_Y": 0.8151012086,
+      "Destination_X": 0.9168963606,
+      "Destination_Y": 0.5607940629,
+      "Availability": "offline",
+      "OnlineStatus": "standby",
+      "Timestamp": 1702393977767,
+      "CurrentOrders": 0,
+      "TotalExpectedOrders": 3
+    },
+    {
+      "DriverID": 3,
+      "CurrentLocation_X": 0.4056559592,
+      "CurrentLocation_Y": 0.5656782776,
+      "Destination_X": 0.0627293531,
+      "Destination_Y": 0.7734734043,
+      "Availability": "offline",
+      "OnlineStatus": "moving",
+      "Timestamp": 1702397337767,
+      "CurrentOrders": 1,
+      "TotalExpectedOrders": 3
+    },
+    {
+      "DriverID": 4,
+      "CurrentLocation_X": 0.4405421981,
+      "CurrentLocation_Y": 0.0549444656,
+      "Destination_X": 0.82926304,
+      "Destination_Y": 0.7364530003,
+      "Availability": "online",
+      "OnlineStatus": "standby",
+      "Timestamp": 1702397037767,
+      "CurrentOrders": 0,
+      "TotalExpectedOrders": 3
+    },
+    {
+      "DriverID": 5,
+      "CurrentLocation_X": 0.791159783,
+      "CurrentLocation_Y": 0.7709227456,
+      "Destination_X": 0.4897026796,
+      "Destination_Y": 0.7003856438,
+      "Availability": "online",
+      "OnlineStatus": "moving",
+      "Timestamp": 1702395957767,
+      "CurrentOrders": 3,
+      "TotalExpectedOrders": 3
+    }
+  ]
+}
