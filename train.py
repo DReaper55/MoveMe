@@ -31,16 +31,16 @@ for entry in merged_dataset['dataset']:
         X.append(features)
         y.append(label)
 
-print(f'Unarranged: {X}')
-
 X = np.array(X)
 y = np.array(y)
-
-print(f'Arranged: {X}')
 
 # Normalize the features
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
+
+# Save the scalar mean and scale
+np.save('scaler_mean.npy', scaler.mean_)
+np.save('scaler_scale.npy', scaler.scale_)
 
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -73,16 +73,8 @@ model.save('trained_model.keras')
 
 # Make predictions for a new set of features
 new_features = np.array([[10.8, 1, 1, 0, 0, 2.3]])
-
-print(f'Arranged 1: {new_features}')
-
 new_features = scaler.transform(new_features)
-
-print(f'Arranged 2: {new_features}')
-
 new_features = new_features.reshape((1, new_features.shape[1], 1))
-
-print(f'Arranged 3: {new_features}')
-
 predicted_eta = model.predict(new_features)
+
 print(f'Predicted ETA for the new features: {predicted_eta[0][0]}')
