@@ -1,53 +1,63 @@
 import json
+import os
 
 import numpy as np
+import sys
 
-from keras.models import load_model
+import tensorflow as tf
+from keras.api.models import load_model
 from sklearn.preprocessing import StandardScaler
 
-# Load the saved model
-loaded_model = load_model('trained_model.keras')
-
-# Load the mean and scale values from numpy files
-scaler_mean = np.load('scaler_mean.npy')
-scaler_scale = np.load('scaler_scale.npy')
+current_dir = os.path.dirname(os.path.realpath(__file__))
 
 
-# X = []
-#
-# # Load merged dataset from merged_dataset.json
-# with open('synthetic_data.json', 'r') as merged_file:
-#     merged_dataset = json.load(merged_file)
-#
-# # Flatten the nested structure to create a flat DataFrame
-# flat_dataset = []
-# for entry in merged_dataset['dataset']:
-#     order = entry['order']
-#     for driver in entry['drivers']:
-#         features = [
-#             driver["AccDistanceFromHereToPickup"],
-#             driver["OnlineStatus"],
-#             driver["CurrentOrders"],
-#             order["OrderType"],
-#             order["OrderPriority"],
-#             order["DistanceToDropOff"],
-#         ]
-#         label = driver["ETA"]
-#         X.append(features)
-#
-# X = np.array(X)
+def predict_eta(features):
+    # Get files using absolute path
+    # model_path = "D:/Development/Web Projects/moveme/moveme/src/main/resources/python/trained_model.keras"
+    model_path = os.path.join(current_dir, 'trained_model.keras')
 
-scaler = StandardScaler()
-scaler.mean_ = scaler_mean
-scaler.scale_ = scaler_scale
-# X = scaler.fit_transform(X)
+    scalar_mean_path = os.path.join(current_dir, 'scaler_mean.npy')
+    # scalar_mean_path = "D:/Development/Web Projects/moveme/moveme/src/main/resources/python/scaler_mean.npy"
 
-# Use the loaded_model to make predictions
-new_features = np.array([[10.8, 1, 1, 0, 0, 2.3]])
+    scalar_scale_path = os.path.join(current_dir, 'scaler_scale.npy')
+    # scalar_scale_path = "D:/Development/Web Projects/moveme/moveme/src/main/resources/python/scaler_scale.npy"
 
-# new_features = scaler.fit_transform(new_features)
+    # Load the saved model
+    loaded_model = load_model(model_path)
 
-new_features = scaler.transform(new_features)
-new_features = new_features.reshape((1, new_features.shape[1], 1))
-predicted_eta = loaded_model.predict(new_features)
-print(f'Predicted ETA for the new features: {predicted_eta[0][0]}')
+    # Load the mean and scale values from numpy files
+    scaler_mean = np.load(scalar_mean_path)
+    scaler_scale = np.load(scalar_scale_path)
+
+    scaler = StandardScaler()
+    scaler.mean_ = scaler_mean
+    scaler.scale_ = scaler_scale
+
+    # Use the loaded_model to make predictions
+    new_features = np.array([features])
+
+    # Transform the new features using the loaded scaler
+    new_features = scaler.transform(new_features)
+    new_features = new_features.reshape((1, new_features.shape[1], 1))
+
+    # Make predictions with the loaded model
+    predicted_eta = loaded_model.predict(new_features)
+
+    return predicted_eta[0][0]
+
+
+if __name__ == "__main__":
+    predicted_eta_result = predict_eta([23, 1, 7.58])
+    print({"eta": predicted_eta_result})
+
+    # Read arguments from the command line
+    # try:
+    #     input_data = sys.argv[1].replace("'", "\"")
+    #     input_data = json.loads(input_data)
+    #
+    #     new_features_input = input_data.get("features", [])
+    #     predicted_eta_result = predict_eta(new_features_input)
+    #     print({"eta": predicted_eta_result})
+    # except (IndexError, json.JSONDecodeError):
+    #     print("Error: Invalid or missing input data.")
+    #     sys.exit(1)

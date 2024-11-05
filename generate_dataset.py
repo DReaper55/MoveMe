@@ -1,5 +1,7 @@
 import json
 import random
+import h5py
+import numpy as np
 
 
 def generate_synthetic_data(num_orders, num_drivers_per_order):
@@ -117,16 +119,54 @@ def save_to_json(data, filename):
     with open(filename, 'w') as json_file:
         json.dump(data, json_file, indent=2)
 
+
+def read_from_json():
+    with open("synthetic_data.json", "r") as json_file:
+        data = json.load(json_file)
+        return data
+
+
+def create_h5_dataset():
+    data = read_from_json()
+
+    # Prepare datasets for storing
+    orders_data = []
+    drivers_data = []
+
+    for entry in data['dataset']:
+        order = entry['order']
+        for driver in entry['drivers']:
+            # Flatten the order and driver features for each driver entry
+            features = [
+                driver["AccDistanceFromHereToPickup"],
+                driver["CurrentOrders"],
+                order["DistanceToDropOff"]
+            ]
+            label = driver["ETA"]
+            orders_data.append(features)
+            drivers_data.append(label)
+
+    # Convert lists to numpy arrays
+    orders_data = np.array(orders_data, dtype=np.float32)
+    drivers_data = np.array(drivers_data, dtype=np.float32)
+
+    # Save to .h5 file
+    with h5py.File("dataset.h5", "w") as h5f:
+        h5f.create_dataset("features", data=orders_data)
+        h5f.create_dataset("labels", data=drivers_data)
+
 # Example usage:
 
 
-orders = 100
-drivers_per_order = 20
+# create_h5_dataset()
 
-synthetic_data = generate_synthetic_data(orders, drivers_per_order)
+# orders = 100
+# drivers_per_order = 20
+
+# synthetic_data = generate_synthetic_data(orders, drivers_per_order)
 
 # Print the generated synthetic data
-print(synthetic_data)
+# print(synthetic_data)
 
 # Save the data to a JSON file
-save_to_json(synthetic_data, 'synthetic_data.json')
+# save_to_json(synthetic_data, 'synthetic_data.json')
