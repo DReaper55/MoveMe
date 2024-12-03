@@ -155,6 +155,22 @@ def create_h5_dataset():
         h5f.create_dataset("features", data=orders_data)
         h5f.create_dataset("labels", data=drivers_data)
 
+
+# Load the .npy files
+mean = np.load('scaler_mean.npy')
+scale = np.load('scaler_scale.npy')
+
+# Convert to lists and save as JSON
+mean_list = mean.tolist()
+scale_list = scale.tolist()
+
+with open('mean.json', 'w') as mean_file:
+    json.dump(mean_list, mean_file)
+
+with open('scale.json', 'w') as scale_file:
+    json.dump(scale_list, scale_file)
+
+
 # Example usage:
 
 

@@ -1,6 +1,6 @@
 import numpy as np
 from keras.src.models import Sequential
-from keras.src.layers import Conv1D, Flatten, Dense, BatchNormalization, Softmax
+from keras.src.layers import Conv1D, Flatten, Dense, BatchNormalization, InputLayer
 from keras.src.optimizers import Adam
 from keras.src.losses import SparseCategoricalCrossentropy, MeanSquaredError
 from sklearn.model_selection import train_test_split
@@ -44,7 +44,8 @@ X_train, X_test, y_train, y_test = train_test_split(X_reshaped, y, test_size=0.2
 
 # Build the CNN model
 model = Sequential([
-    Conv1D(32, kernel_size=2, activation='relu', input_shape=(X_train.shape[1], 1)),
+    InputLayer(input_shape=(X_train.shape[1], 1)),
+    Conv1D(32, kernel_size=2, activation='relu'),
     BatchNormalization(),
     Conv1D(64, kernel_size=2, activation='relu'),
     BatchNormalization(),
@@ -54,33 +55,16 @@ model = Sequential([
     Dense(1, activation='linear')  # Single neuron output for regression
 ])
 
-# Build the RNN model
-# model = Sequential()
-# model.add(LSTM(32, input_shape=(X_train.shape[1], 1), activation='relu', return_sequences=True))
-# model.add(BatchNormalization())
-# model.add(LSTM(32, activation='relu'))
-# model.add(BatchNormalization())
-# model.add(Dense(1, activation='linear'))
 
 # Compile the model
-# model.compile(optimizer=Adam(learning_rate=0.001), loss='mean_squared_error')
 model.compile(optimizer=Adam(learning_rate=0.001),
               loss=MeanSquaredError(),
               metrics=['mae'])
 
-# Reshape the input for LSTM
-# X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], 1))
-# X_test = X_test.reshape((X_test.shape[0], X_test.shape[1], 1))
-
 # Train the model
-# model.fit(X_train, y_train, epochs=50, validation_data=(X_test, y_test))
+model.fit(X_train, y_train, epochs=50, validation_data=(X_test, y_test))
 
 history = model.fit(X_train, y_train, epochs=50, validation_data=(X_test, y_test))
-
-
-# Evaluate the model on the test set
-# loss = model.evaluate(X_test, y_test)
-# print(f'Mean Squared Error on Test Set: {loss}')
 
 # Evaluate the model on the test set
 test_loss, test_accuracy = model.evaluate(X_test, y_test)
@@ -98,8 +82,7 @@ print(f"Test Loss: {test_loss}, Test Accuracy: {test_accuracy}")
 
 
 # Save the entire model (architecture and weights)
-# model.save('trained_model.keras')
-# model.save('tm')
+# model.save('trained_model.h5')
 
 # Make predictions for a new set of features
 new_features = np.array([[47.0, 3, 8.99]])
